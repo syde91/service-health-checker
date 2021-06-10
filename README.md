@@ -1,5 +1,5 @@
 # service-health-checker
-A simple concurrent health check monitoring service that monitors the Status codes of the services mentioned in target.csv.
+A simple concurrent health check monitoring service that monitors the Health(HTTP Status Codes) of the services mentioned in target.csv.
 
 ![alt text](https://user-images.githubusercontent.com/80057294/121485936-4538e000-ca03-11eb-9e9d-1ab25a107c08.png)
 
