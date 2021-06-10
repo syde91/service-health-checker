@@ -8,7 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"service-health-check/config"
+	"service-health-checker/config"
 	"strconv"
 	"strings"
 	"sync"

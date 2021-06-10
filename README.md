@@ -1,5 +1,5 @@
 # service-health-checker
-A simple health check monitoring service.
+A simple concurrent health check monitoring service.
 
 ![alt text](https://user-images.githubusercontent.com/80057294/121485936-4538e000-ca03-11eb-9e9d-1ab25a107c08.png)
 
@@ -13,7 +13,7 @@ $ make watch
 
 ## Execute Docker file
 ```
- docker build -t service-health-check . && docker run  -dp 3000:3000 service-health-check
+ docker build -t service-health-check . && docker run  -dp 8080:8080 service-health-check (Change port number as per preference)
  ```
  
 # Instructions

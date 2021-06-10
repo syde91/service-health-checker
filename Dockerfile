@@ -1,7 +1,5 @@
 FROM golang:1.15.5 as builder
-WORKDIR $GOPATH/src/service-health-check
+WORKDIR $GOPATH/src/service-health-checker
 COPY . .
-RUN pwd
-RUN ls
 RUN go build
-CMD ["./service-health-check"]
+CMD ["./service-health-checker"]
