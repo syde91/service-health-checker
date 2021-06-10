@@ -21,7 +21,7 @@ $ make run
 2) Modify Config file to suit your needs.
 
 # Configuration
-Edit config file in /config/config.go.
+Edit config file in /config/config.go. Here are the following configuration variables:
 1) Source: Source file containing all the service URLs
 2) MaxConcurrentThreads: Number of concurrent requests that can be made by the application. (Default: 1024)
 3) HealthCheckFrequency: Describes frequency of the service health check in seconds. Default: 600 seconds(10 mins)
