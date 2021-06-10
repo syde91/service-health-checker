@@ -29,7 +29,7 @@ Edit config file in /config/config.go.
 
 *Note: The application pings all the services in order mentioned in the CSV file and Repings the service only after the all the services are pinged once. To ensure all services are pinged every within the periodic time limit, make sure MaxConcurrentThreads >= (NumberOfServices * Timeout / HealthCheckFrequency)
 
-# CI Pipelines
+# Consideration for CI Pipelines
 Pipelines: On every pull request
 Pre-submit Checks:
 1) Check for lints
