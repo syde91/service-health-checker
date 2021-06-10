@@ -5,7 +5,7 @@ A simple concurrent health check monitoring service.
 
 # Quick Start
 
-To Install, you need to install Go and set your Go workspace first.
+To Install, you need to install Go and set your Go workspace first. And execute when the folder is within your GOROOT/src (or) GOPATH.
 
 ```
 $ make watch
