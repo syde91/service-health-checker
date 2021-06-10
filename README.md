@@ -8,7 +8,7 @@ A simple concurrent health check monitoring service that monitors the Health(HTT
 To Install, you need to install Go and set your Go workspace first. And execute when the folder is within your GOROOT/src (or) GOPATH.
 
 ```
-$ make watch
+$ make run
 ```
 
 ## Execute Docker file
@@ -40,4 +40,4 @@ Pre-submit Checks:
 # Considerations for CD
 Since this is a single node application. We need to worry about:
 1) Adding a persistance layer under the application, so that we can resume from the place where the application restarted.
-2) Eventually we need to break the application to support multi node deployment.
+2) Eventually we need to break the application to support multi node execution.
