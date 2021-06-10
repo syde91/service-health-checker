@@ -106,7 +106,7 @@ func (s *Services) SpawnWorkerThreads(threads int) {
 	return
 }
 
-// Summary -0 Publishes the summary
+// Summary -- Publishes the summary
 func (s *Services) Summary() string {
 	fmt.Print("\033[H\033[2J")
 	resp200 := 0
@@ -143,9 +143,9 @@ func (s *Services) Summary() string {
 	}
 	fmt.Printf("SERVICE MONITOR\n\n")
 	fmt.Printf("Total Services: %d\n", len(s.Stats))
-	fmt.Printf("Total Healthy Services(200): %d\n", resp200)
-	fmt.Printf("Total Missing Services(400): %d\n", resp404)
-	fmt.Printf("Total Broken Services(500): %d\n", resp500)
+	fmt.Printf("Total Healthy Services(>200): %d\n", resp200)
+	fmt.Printf("Total Missing Services(404): %d\n", resp404)
+	fmt.Printf("Total Broken Services(>500): %d\n", resp500)
 	fmt.Printf("Total Unresponsive Services: %d\n", remaining)
 	fmt.Printf("---------------------------------------------------------\n")
 	fmt.Printf("SERVICE \t|\t CURRENT STATUS \t|\t HISTORY(Last 6 Responses)\n")
