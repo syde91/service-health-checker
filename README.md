@@ -1,6 +1,8 @@
 # service-health-checker
 A simple health check monitoring service.
 
+![alt text](https://user-images.githubusercontent.com/80057294/121485936-4538e000-ca03-11eb-9e9d-1ab25a107c08.png)
+
 # Quick Start
 
 To Install, you need to install Go and set your Go workspace first.
@@ -30,10 +32,10 @@ Edit config file in /config/config.go.
 # CI Pipelines
 Pipelines: On every pull request
 Pre-submit Checks:
-#1 Check for lints
-#2 Check builds
-#3 Run tests before deployment
-#4 Check URL format
+1) Check for lints
+2) Check builds
+3) Run tests before deployment
+4) Check URL format
 
 # Considerations for CD
 Since this is a single node application. We need to worry about:

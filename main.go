@@ -11,6 +11,7 @@ import (
 	"service-health-check/config"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -20,6 +21,7 @@ type Services struct {
 }
 
 type Service struct {
+	Lock          *sync.RWMutex
 	Name          string
 	URL           string
 	Status        int
@@ -39,44 +41,12 @@ type ServiceStatus struct {
 var timeout time.Duration
 var client http.Client
 
-func main() {
-	var S Services
-	settings := config.Settings
-	timeout = time.Duration(settings.Timeout) * time.Second
-
-	err := S.Import(settings.Source)
-	if err != nil {
-		log.Fatal(err)
-	}
-	S.MQ = make(chan Message, 10*settings.MaxConcurrentThreads)
-	S.SpawnWorkerThreads(settings.MaxConcurrentThreads)
-	ticker := time.Tick(time.Duration(settings.HealthCheckFrequency) * time.Second)
-	transport := http.Transport{
-		Dial: dialTimeout,
-	}
-
-	client = http.Client{
-		Transport: &transport,
-	}
-	go func() {
-		for ; true; <-ticker {
-			for i, v := range S.Stats {
-				S.MQ <- Message{
-					URL:   v.URL,
-					index: i,
-				}
-			}
-			S.Summary()
-		}
-	}()
-	log.Fatal(http.ListenAndServe(settings.Port, nil))
-}
-
 func makeService(name, url string) Service {
 	return Service{
 		Name:          name,
 		URL:           url,
 		StatusHistory: []ServiceStatus{},
+		Lock:          &sync.RWMutex{},
 	}
 }
 
@@ -141,7 +111,9 @@ func (s *Services) Summary() string {
 	for _, v := range s.Stats {
 		result += v.Name + "    \t|\t\t" + strconv.Itoa(v.Status) + "\t\t"
 		for i := 0; i < len(v.StatusHistory); i++ {
+			v.Lock.RLock()
 			result += "|" + strconv.Itoa(v.StatusHistory[i].Status) + ""
+			v.Lock.RUnlock()
 		}
 		result += "\n"
 		switch int(v.Status / 100) {
@@ -192,10 +164,45 @@ func Listener(s *Services) {
 		} else {
 			defer resp.Body.Close()
 		}
+		s.Stats[message.index].Lock.Lock()
 		s.Stats[message.index].Status = resp.StatusCode
 		s.Stats[message.index].StatusHistory = append(s.Stats[message.index].StatusHistory, ServiceStatus{Status: resp.StatusCode, Time: time.Now()})
 		if len(s.Stats[message.index].StatusHistory) > 6 {
 			s.Stats[message.index].StatusHistory = s.Stats[message.index].StatusHistory[1:]
 		}
+		s.Stats[message.index].Lock.Unlock()
 	}
+}
+
+func main() {
+	var S Services
+	settings := config.Settings
+	timeout = time.Duration(settings.Timeout) * time.Second
+
+	err := S.Import(settings.Source)
+	if err != nil {
+		log.Fatal(err)
+	}
+	S.MQ = make(chan Message, 10*settings.MaxConcurrentThreads)
+	S.SpawnWorkerThreads(settings.MaxConcurrentThreads)
+	ticker := time.Tick(time.Duration(settings.HealthCheckFrequency) * time.Second)
+	transport := http.Transport{
+		Dial: dialTimeout,
+	}
+
+	client = http.Client{
+		Transport: &transport,
+	}
+	go func() {
+		for ; true; <-ticker {
+			for i, v := range S.Stats {
+				S.MQ <- Message{
+					URL:   v.URL,
+					index: i,
+				}
+			}
+			S.Summary()
+		}
+	}()
+	log.Fatal(http.ListenAndServe(settings.Port, nil))
 }
