@@ -15,11 +15,13 @@ import (
 	"time"
 )
 
+// Services -- Defines all services that need to be monitored
 type Services struct {
 	Stats []Service
 	MQ    chan Message
 }
 
+// Service -- Defines a service
 type Service struct {
 	Lock          *sync.RWMutex
 	Name          string
@@ -28,11 +30,13 @@ type Service struct {
 	StatusHistory []ServiceStatus
 }
 
+// Message -- Defines the message to the wroker threads
 type Message struct {
 	URL   string
 	index int
 }
 
+// ServiceStatus -- Defines the status Response
 type ServiceStatus struct {
 	Status int
 	Time   time.Time
@@ -50,7 +54,7 @@ func makeService(name, url string) Service {
 	}
 }
 
-// import -- scan a file and import the data
+// Import -- scan a file and import the data
 func (s *Services) Import(filePath string) error {
 
 	file, err := os.Open(filePath)
@@ -92,6 +96,7 @@ func (s *Services) Import(filePath string) error {
 	return nil
 }
 
+// SpawnWorkerThreads -- Creates a pool of worker threads listening to a channel
 func (s *Services) SpawnWorkerThreads(threads int) {
 
 	for i := 0; i < threads; i++ {
@@ -101,6 +106,7 @@ func (s *Services) SpawnWorkerThreads(threads int) {
 	return
 }
 
+// Summary -0 Publishes the summary
 func (s *Services) Summary() string {
 	fmt.Print("\033[H\033[2J")
 	resp200 := 0
@@ -152,6 +158,7 @@ func dialTimeout(network, addr string) (net.Conn, error) {
 	return net.DialTimeout(network, addr, timeout)
 }
 
+// Listener -- Worker thread making the request
 func Listener(s *Services) {
 	var message Message
 	for {
